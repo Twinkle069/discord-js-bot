@@ -24,9 +24,11 @@
     "url": "https://github.com/saiteja-madha/discord-js-bot/issues"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.2.1",
     "@lavaclient/queue": "^2.1.1",
     "@lavaclient/spotify": "^3.1.0",
     "@vitalets/google-translate-api": "^9.2.0",
+    "aaru-translator": "^1.0.1",
     "ascii-table": "0.0.9",
     "btoa": "^1.2.1",
     "common-tags": "^1.8.2",
