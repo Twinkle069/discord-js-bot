@@ -40,8 +40,8 @@ const messageHistory = {};
 const cooldown = {};
 
 // Function to translate chatbot response
-async function translateResponse(text) {
-  return Translator ? aaruTranslator.translate("auto", "en", text) : text;
+async function translateResponse(text, lang) {
+  return Translator ? aaruTranslator.translate("auto", lang || "en", text) : text;
 }
 
 // Function to update cooldown timer for a user
@@ -109,21 +109,21 @@ async function ImageResponse(message, imageUrl, prompt, userId) {
       
     return text;
   } catch (error) {
-    console.log(error);
+    message.client.logger.error(error);
     return "Oops! Something went wrong while processing the image.";
   }
 }
 
 // Function to get text response
-async function getTextResponse(message, messageContent, user) {
+async function getTextResponse(message, messageContent, user, lang) {
   const response = await TextResponse(message, messageContent, user.id);
-  return translateResponse(response);
+  return translateResponse(response, lang);
 }
 
 // Function to get image response
-async function getImageResponse(message, imageUrl, prompt, userId) {
+async function getImageResponse(message, imageUrl, prompt, userId, lang) {
   const response = await ImageResponse(message, imageUrl, prompt, userId);
-  return translateResponse(response);
+  return translateResponse(response, lang);
 }
 
 // Main chatbot function to handle incoming messages
@@ -137,18 +137,20 @@ async function chatbot(client, message, settings) {
       const messageContent = message.content.replace(MentionRegex, '').trim();
       if (messageContent) {
         const imageUrl = message.attachments.first()?.url;
-        return message.safeReply(await (imageUrl && message.attachments.first().height ? getImageResponse(message, imageUrl, messageContent, message.author.id) : getTextResponse(message, messageContent, message.author)));
+        return message.safeReply(await (imageUrl && message.attachments.first().height ? getImageResponse(message, imageUrl, messageContent, message.author.id, settings.chatbotLang) : getTextResponse(message, messageContent, message.author, settings.chatbotLang)));
       }
     }
 
     // Check if message is in chatbot channel
     if (message.channel.id === settings.chatbotId) {
       const imageUrl = message.attachments.first()?.url;
-      return message.safeReply(await (imageUrl && message.attachments.first().height ? getImageResponse(message, imageUrl, message.content, message.author.id) : getTextResponse(message, message.content, message.author)));
+      return message.safeReply(await (imageUrl && message.attachments.first().height ? getImageResponse(message, imageUrl, message.content, message.author.id, settings.chatbotLang) : getTextResponse(message, message.content, message.author, settings.chatbotLang)));
     }
   } catch (error) {
-    console.log(error);
+ client.logger.error(error);
+    message.safeReply("Oops! Something went wrong while processing your request. Please try again later.");
   }
 }
 
 module.exports = { chatbot };
+      
