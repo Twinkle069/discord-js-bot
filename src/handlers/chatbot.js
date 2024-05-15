@@ -79,10 +79,7 @@ async function checkCooldown(userId) {
   return null;
 }
 
-// Update cooldown time for a user
-async function updateIdleTime(userId) {
-  idleTime.set(userId, Date.now());
-}
+/*... Not for you; that's why I removed ...*/
 
 // Generate text response based on user input
 async function TextResponse(message, prompt, userId, settings) {
