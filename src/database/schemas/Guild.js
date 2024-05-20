@@ -108,6 +108,10 @@ const Schema = new mongoose.Schema({
     rejected_channel: String,
     staff_roles: [String],
   },
+  chatbotId: {
+    type: String,
+    required: false,
+  },
 });
 
 const Model = mongoose.model("guild", Schema);
