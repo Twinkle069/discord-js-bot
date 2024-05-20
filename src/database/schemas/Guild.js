@@ -112,6 +112,10 @@ const Schema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  chatbotLang: {
+    type: String,
+    required: false,
+  },
 });
 
 const Model = mongoose.model("guild", Schema);
@@ -155,3 +159,4 @@ module.exports = {
     return guildData;
   },
 };
+    
